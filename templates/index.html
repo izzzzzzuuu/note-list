@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Notes App</title>
+</head>
+<body>
+  <h1>Notes</h1>
+
+  <!-- <form id="noteForm">
+    <input type="text" id="title" placeholder="Title" required />
+    <input type="text" id="content" placeholder="Content" required />
+    <button type="submit">Add Note</button>
+  </form> -->
+
+  <form id="noteForm">
+    <input type="text" id="text" placeholder="Type ur note here" />
+    <button type="submit">Add note</button>
+  </form>
+  
+  <h2>Existing Notes</h2>
+  <ul id="notesList"></ul>
+
+  <script>
+    async function fetchNotes() {
+      const res = await fetch("/notes-get");
+      const notes = await res.json();
+
+      const list = document.getElementById("notesList");
+      list.innerHTML = "";
+
+      notes.forEach(n => {
+        const li = document.createElement("li");
+        li.textContent = n.text;
+        list.appendChild(li);
+      });
+    }
+
+    document.getElementById("noteForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const text = document.getElementById("text").value;
+
+      await fetch("/notes-create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({text: text})
+      });
+
+      document.getElementById("text").value="";
+      fetchNotes();
+    });
+
+    fetchNotes();
+  </script>
+</body>
+</html>

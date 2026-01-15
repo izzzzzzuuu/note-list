@@ -31,10 +31,22 @@ def get_db():
         db.close()
 
 # Routes
+# index / Homepage
 @app.get("/notes-get", response_model=list[schemas.Note_output])
 def read_notes(db: Session = Depends(get_db)):
     return crud.get_notes(db)
 
+# App addfunction , reroute to homepage
 @app.post("/notes-create", response_model=schemas.Note_output)
 def create_note(note: schemas.NoteCreate_inherit_class, db: Session = Depends(get_db)):
     return crud.create_note(db, note)
+
+# # App delete-fx , refresh data from db, should be updated
+# @app.post("/notes-delete", response_model=schemas.Note_output)
+# def delete_note(note: schemas.NoteCreate_inherit_class, db: Session = Depends(get_db)):
+#     return crud.delete_note(db, note)
+
+# App delete-fx , refresh data from db, should be updated
+@app.post("/notes-delete/{note_id}", response_model=schemas.Note_output)
+def delete_note(note_id: int, db: Session = Depends(get_db)):
+    return crud.delete_note(db, note_id)

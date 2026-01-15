@@ -14,11 +14,21 @@
 
   <form id="noteForm">
     <input type="text" id="text" placeholder="Type ur note here" />
-    <button type="submit">Add note</button>
+  </form>
+  <form id="testxxxx">
+    <br><button type="submit">Add note</button>
+  </form>
+
+  <form id="noteFormDelete">
+    <input type="text" id="textDel" placeholder="Which note to delete ?" />
+  </form>
+  <form id="testDelete">
+    <button type="submit">Delete</button>
   </form>
   
+  <p>Helloooo</p>
   <h2>Existing Notes</h2>
-  <ol id="notesList"></ol>
+  <ul id="notesList"></ul>
 
   <script>
     async function fetchNotes() {
@@ -30,12 +40,15 @@
 
       notes.forEach(n => {
         const li = document.createElement("li");
-        li.textContent = n.text;
+        
+        li.textContent = `ID: ${n.id} ${n.text}`;
+        // `${n.text} (ID: ${n.id})`;
         list.appendChild(li);
       });
     }
 
-    document.getElementById("noteForm").addEventListener("submit", async (e) => {
+    // add data to database
+    document.getElementById("testxxxx").addEventListener("submit", async (e) => {
       e.preventDefault();
       const text = document.getElementById("text").value;
 
@@ -46,6 +59,21 @@
       });
 
       document.getElementById("text").value="";
+      fetchNotes();
+    });
+
+    // delete data from DB 
+    document.getElementById("testDelete").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const textDel = document.getElementById("textDel").value;
+
+      await fetch(`/notes-delete/${textDel}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: textDel })
+      });
+
+      document.getElementById("textDel").value="";
       fetchNotes();
     });
 

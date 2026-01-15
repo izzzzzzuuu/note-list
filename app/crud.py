@@ -11,3 +11,17 @@ def create_note(db: Session, note: schemas.NoteCreate_inherit_class):
     db.commit()
     db.refresh(db_note)
     return db_note
+
+# def delete_note(db: Session, note: schemas.NoteCreate_inherit_class):
+#     db_note = models.Note(text=note.text)
+#     db.delete(db_note)
+#     db.commit()
+#     db.refresh(db_note)
+#     return db_note
+
+
+def delete_note(db: Session, note_id:id):
+    db_note = db.query(models.Note).filter(models.Note.id == note_id).first()
+    db.delete(db_note)
+    db.commit()
+    return db_note
